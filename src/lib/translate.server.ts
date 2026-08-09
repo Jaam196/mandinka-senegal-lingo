@@ -12,7 +12,7 @@ export type TranslationResult = {
   confidence: Confidence;
   source: string | null;
   matchType: "dictionary" | "phrase" | "ai" | "none";
-  alternatives: { text: string; note?: string }[];
+  alternatives: { text: string; note?: string | undefined }[];
   notes: string | null;
 };
 
