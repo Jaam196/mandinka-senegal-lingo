@@ -10,7 +10,10 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AjustesRouteImport } from './routes/ajustes'
+import { Route as ConversacionRouteImport } from './routes/conversacion'
 import { Route as DiccionarioRouteImport } from './routes/diccionario'
+import { Route as FavoritosRouteImport } from './routes/favoritos'
 import { Route as FrasesRouteImport } from './routes/frases'
 
 const IndexRoute = IndexRouteImport.update({
@@ -18,9 +21,24 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AjustesRoute = AjustesRouteImport.update({
+  id: '/ajustes',
+  path: '/ajustes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConversacionRoute = ConversacionRouteImport.update({
+  id: '/conversacion',
+  path: '/conversacion',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const DiccionarioRoute = DiccionarioRouteImport.update({
   id: '/diccionario',
   path: '/diccionario',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritosRoute = FavoritosRouteImport.update({
+  id: '/favoritos',
+  path: '/favoritos',
   getParentRoute: () => rootRouteImport,
 } as any)
 const FrasesRoute = FrasesRouteImport.update({
@@ -31,31 +49,62 @@ const FrasesRoute = FrasesRouteImport.update({
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/ajustes': typeof AjustesRoute
+  '/conversacion': typeof ConversacionRoute
   '/diccionario': typeof DiccionarioRoute
+  '/favoritos': typeof FavoritosRoute
   '/frases': typeof FrasesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/ajustes': typeof AjustesRoute
+  '/conversacion': typeof ConversacionRoute
   '/diccionario': typeof DiccionarioRoute
+  '/favoritos': typeof FavoritosRoute
   '/frases': typeof FrasesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/ajustes': typeof AjustesRoute
+  '/conversacion': typeof ConversacionRoute
   '/diccionario': typeof DiccionarioRoute
+  '/favoritos': typeof FavoritosRoute
   '/frases': typeof FrasesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/diccionario' | '/frases'
+  fullPaths:
+    | '/'
+    | '/ajustes'
+    | '/conversacion'
+    | '/diccionario'
+    | '/favoritos'
+    | '/frases'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/diccionario' | '/frases'
-  id: '__root__' | '/' | '/diccionario' | '/frases'
+  to:
+    | '/'
+    | '/ajustes'
+    | '/conversacion'
+    | '/diccionario'
+    | '/favoritos'
+    | '/frases'
+  id:
+    | '__root__'
+    | '/'
+    | '/ajustes'
+    | '/conversacion'
+    | '/diccionario'
+    | '/favoritos'
+    | '/frases'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AjustesRoute: typeof AjustesRoute
+  ConversacionRoute: typeof ConversacionRoute
   DiccionarioRoute: typeof DiccionarioRoute
+  FavoritosRoute: typeof FavoritosRoute
   FrasesRoute: typeof FrasesRoute
 }
 
@@ -68,11 +117,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/ajustes': {
+      id: '/ajustes'
+      path: '/ajustes'
+      fullPath: '/ajustes'
+      preLoaderRoute: typeof AjustesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conversacion': {
+      id: '/conversacion'
+      path: '/conversacion'
+      fullPath: '/conversacion'
+      preLoaderRoute: typeof ConversacionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/diccionario': {
       id: '/diccionario'
       path: '/diccionario'
       fullPath: '/diccionario'
       preLoaderRoute: typeof DiccionarioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favoritos': {
+      id: '/favoritos'
+      path: '/favoritos'
+      fullPath: '/favoritos'
+      preLoaderRoute: typeof FavoritosRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/frases': {
@@ -87,7 +157,10 @@ declare module '@tanstack/react-router' {
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AjustesRoute: AjustesRoute,
+  ConversacionRoute: ConversacionRoute,
   DiccionarioRoute: DiccionarioRoute,
+  FavoritosRoute: FavoritosRoute,
   FrasesRoute: FrasesRoute,
 }
 export const routeTree = rootRouteImport
