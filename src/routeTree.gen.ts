@@ -10,33 +10,128 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as AdminRouteImport } from './routes/admin'
+import { Route as AjustesRouteImport } from './routes/ajustes'
+import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ConversacionRouteImport } from './routes/conversacion'
+import { Route as DiccionarioRouteImport } from './routes/diccionario'
+import { Route as FavoritosRouteImport } from './routes/favoritos'
+import { Route as FrasesRouteImport } from './routes/frases'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AdminRoute = AdminRouteImport.update({
+  id: '/admin',
+  path: '/admin',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AjustesRoute = AjustesRouteImport.update({
+  id: '/ajustes',
+  path: '/ajustes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConversacionRoute = ConversacionRouteImport.update({
+  id: '/conversacion',
+  path: '/conversacion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const DiccionarioRoute = DiccionarioRouteImport.update({
+  id: '/diccionario',
+  path: '/diccionario',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FavoritosRoute = FavoritosRouteImport.update({
+  id: '/favoritos',
+  path: '/favoritos',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FrasesRoute = FrasesRouteImport.update({
+  id: '/frases',
+  path: '/frases',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/ajustes': typeof AjustesRoute
+  '/auth': typeof AuthRoute
+  '/conversacion': typeof ConversacionRoute
+  '/diccionario': typeof DiccionarioRoute
+  '/favoritos': typeof FavoritosRoute
+  '/frases': typeof FrasesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/ajustes': typeof AjustesRoute
+  '/auth': typeof AuthRoute
+  '/conversacion': typeof ConversacionRoute
+  '/diccionario': typeof DiccionarioRoute
+  '/favoritos': typeof FavoritosRoute
+  '/frases': typeof FrasesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/admin': typeof AdminRoute
+  '/ajustes': typeof AjustesRoute
+  '/auth': typeof AuthRoute
+  '/conversacion': typeof ConversacionRoute
+  '/diccionario': typeof DiccionarioRoute
+  '/favoritos': typeof FavoritosRoute
+  '/frases': typeof FrasesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths:
+    | '/'
+    | '/admin'
+    | '/ajustes'
+    | '/auth'
+    | '/conversacion'
+    | '/diccionario'
+    | '/favoritos'
+    | '/frases'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to:
+    | '/'
+    | '/admin'
+    | '/ajustes'
+    | '/auth'
+    | '/conversacion'
+    | '/diccionario'
+    | '/favoritos'
+    | '/frases'
+  id:
+    | '__root__'
+    | '/'
+    | '/admin'
+    | '/ajustes'
+    | '/auth'
+    | '/conversacion'
+    | '/diccionario'
+    | '/favoritos'
+    | '/frases'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  AdminRoute: typeof AdminRoute
+  AjustesRoute: typeof AjustesRoute
+  AuthRoute: typeof AuthRoute
+  ConversacionRoute: typeof ConversacionRoute
+  DiccionarioRoute: typeof DiccionarioRoute
+  FavoritosRoute: typeof FavoritosRoute
+  FrasesRoute: typeof FrasesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,22 +143,68 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/admin': {
+      id: '/admin'
+      path: '/admin'
+      fullPath: '/admin'
+      preLoaderRoute: typeof AdminRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/ajustes': {
+      id: '/ajustes'
+      path: '/ajustes'
+      fullPath: '/ajustes'
+      preLoaderRoute: typeof AjustesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/conversacion': {
+      id: '/conversacion'
+      path: '/conversacion'
+      fullPath: '/conversacion'
+      preLoaderRoute: typeof ConversacionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/diccionario': {
+      id: '/diccionario'
+      path: '/diccionario'
+      fullPath: '/diccionario'
+      preLoaderRoute: typeof DiccionarioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/favoritos': {
+      id: '/favoritos'
+      path: '/favoritos'
+      fullPath: '/favoritos'
+      preLoaderRoute: typeof FavoritosRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/frases': {
+      id: '/frases'
+      path: '/frases'
+      fullPath: '/frases'
+      preLoaderRoute: typeof FrasesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  AdminRoute: AdminRoute,
+  AjustesRoute: AjustesRoute,
+  AuthRoute: AuthRoute,
+  ConversacionRoute: ConversacionRoute,
+  DiccionarioRoute: DiccionarioRoute,
+  FavoritosRoute: FavoritosRoute,
+  FrasesRoute: FrasesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
-
-import type { getRouter } from './router.tsx'
-import type { startInstance } from './start.ts'
-declare module '@tanstack/react-start' {
-  interface Register {
-    ssr: true
-    router: Awaited<ReturnType<typeof getRouter>>
-    config: Awaited<ReturnType<typeof startInstance.getOptions>>
-  }
-}
