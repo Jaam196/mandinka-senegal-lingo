@@ -10,33 +10,53 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as DiccionarioRouteImport } from './routes/diccionario'
+import { Route as FrasesRouteImport } from './routes/frases'
 
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const DiccionarioRoute = DiccionarioRouteImport.update({
+  id: '/diccionario',
+  path: '/diccionario',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const FrasesRoute = FrasesRouteImport.update({
+  id: '/frases',
+  path: '/frases',
+  getParentRoute: () => rootRouteImport,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/diccionario': typeof DiccionarioRoute
+  '/frases': typeof FrasesRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/diccionario': typeof DiccionarioRoute
+  '/frases': typeof FrasesRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/diccionario': typeof DiccionarioRoute
+  '/frases': typeof FrasesRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/'
+  fullPaths: '/' | '/diccionario' | '/frases'
   fileRoutesByTo: FileRoutesByTo
-  to: '/'
-  id: '__root__' | '/'
+  to: '/' | '/diccionario' | '/frases'
+  id: '__root__' | '/' | '/diccionario' | '/frases'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  DiccionarioRoute: typeof DiccionarioRoute
+  FrasesRoute: typeof FrasesRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -48,11 +68,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/diccionario': {
+      id: '/diccionario'
+      path: '/diccionario'
+      fullPath: '/diccionario'
+      preLoaderRoute: typeof DiccionarioRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/frases': {
+      id: '/frases'
+      path: '/frases'
+      fullPath: '/frases'
+      preLoaderRoute: typeof FrasesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
   }
 }
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  DiccionarioRoute: DiccionarioRoute,
+  FrasesRoute: FrasesRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
