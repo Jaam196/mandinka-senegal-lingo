@@ -39,7 +39,7 @@ type FormState = {
   region: string;
   source_name: string;
   source_url: string;
-  confidence: string;
+  confidence: Entry["confidence"];
   verified: boolean;
 };
 
@@ -144,7 +144,7 @@ function AdminPage() {
       region: form.region.trim(),
       source_name: form.source_name.trim(),
       source_url: form.source_url.trim() || null,
-      confidence: form.confidence as Entry["confidence"],
+      confidence: form.confidence,
       verified: form.verified,
     };
     const query = form.id
@@ -335,7 +335,7 @@ function AdminPage() {
             <select
               className="mt-1 h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
               value={form.confidence}
-              onChange={(e) => setForm({ ...form, confidence: e.target.value })}
+              onChange={(e) => setForm({ ...form, confidence: e.target.value as Entry["confidence"] })}
             >
               <option value="verified">Confirmada</option>
               <option value="probable">Probable</option>
