@@ -11,6 +11,8 @@ import { Textarea } from "@/components/ui/textarea";
 import { supabase } from "@/integrations/supabase/client";
 import { useCategories, useEntries, type Entry } from "@/lib/dictionary";
 
+type Confidence = "verified" | "probable" | "approximate";
+
 export const Route = createFileRoute("/admin")({
   head: () => ({
     meta: [
@@ -39,7 +41,7 @@ type FormState = {
   region: string;
   source_name: string;
   source_url: string;
-  confidence: Entry["confidence"];
+  confidence: Confidence;
   verified: boolean;
 };
 
@@ -144,7 +146,7 @@ function AdminPage() {
       region: form.region.trim(),
       source_name: form.source_name.trim(),
       source_url: form.source_url.trim() || null,
-      confidence: form.confidence,
+      confidence: form.confidence as Confidence,
       verified: form.verified,
     };
     const query = form.id
@@ -198,7 +200,7 @@ function AdminPage() {
       example_spanish: r["example_spanish"] || null,
       region: r["region"] || "senegal",
       source_name: r["source"] || null,
-      confidence: (r["confidence"] || "probable") as Entry["confidence"],
+      confidence: (r["confidence"] || "probable") as Confidence,
     }));
     const { error } = await supabase.from("dictionary_entries").insert(payload);
     if (error) {
@@ -335,7 +337,7 @@ function AdminPage() {
             <select
               className="mt-1 h-10 w-full rounded-md border border-input bg-background px-3 text-sm"
               value={form.confidence}
-              onChange={(e) => setForm({ ...form, confidence: e.target.value as Entry["confidence"] })}
+              onChange={(e) => setForm({ ...form, confidence: e.target.value as Confidence })}
             >
               <option value="verified">Confirmada</option>
               <option value="probable">Probable</option>
@@ -454,7 +456,7 @@ function AdminPage() {
                       region: entry.region,
                       source_name: entry.source_name ?? "",
                       source_url: entry.source_url ?? "",
-                      confidence: entry.confidence,
+                      confidence: entry.confidence as Confidence,
                       verified: entry.verified,
                     })
                   }
