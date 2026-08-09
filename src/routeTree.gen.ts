@@ -11,6 +11,7 @@
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AjustesRouteImport } from './routes/ajustes'
+import { Route as AuthRouteImport } from './routes/auth'
 import { Route as ConversacionRouteImport } from './routes/conversacion'
 import { Route as DiccionarioRouteImport } from './routes/diccionario'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
@@ -24,6 +25,11 @@ const IndexRoute = IndexRouteImport.update({
 const AjustesRoute = AjustesRouteImport.update({
   id: '/ajustes',
   path: '/ajustes',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const AuthRoute = AuthRouteImport.update({
+  id: '/auth',
+  path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConversacionRoute = ConversacionRouteImport.update({
@@ -50,6 +56,7 @@ const FrasesRoute = FrasesRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/ajustes': typeof AjustesRoute
+  '/auth': typeof AuthRoute
   '/conversacion': typeof ConversacionRoute
   '/diccionario': typeof DiccionarioRoute
   '/favoritos': typeof FavoritosRoute
@@ -58,6 +65,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/ajustes': typeof AjustesRoute
+  '/auth': typeof AuthRoute
   '/conversacion': typeof ConversacionRoute
   '/diccionario': typeof DiccionarioRoute
   '/favoritos': typeof FavoritosRoute
@@ -67,6 +75,7 @@ export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/ajustes': typeof AjustesRoute
+  '/auth': typeof AuthRoute
   '/conversacion': typeof ConversacionRoute
   '/diccionario': typeof DiccionarioRoute
   '/favoritos': typeof FavoritosRoute
@@ -77,6 +86,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/ajustes'
+    | '/auth'
     | '/conversacion'
     | '/diccionario'
     | '/favoritos'
@@ -85,6 +95,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/ajustes'
+    | '/auth'
     | '/conversacion'
     | '/diccionario'
     | '/favoritos'
@@ -93,6 +104,7 @@ export interface FileRouteTypes {
     | '__root__'
     | '/'
     | '/ajustes'
+    | '/auth'
     | '/conversacion'
     | '/diccionario'
     | '/favoritos'
@@ -102,6 +114,7 @@ export interface FileRouteTypes {
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AjustesRoute: typeof AjustesRoute
+  AuthRoute: typeof AuthRoute
   ConversacionRoute: typeof ConversacionRoute
   DiccionarioRoute: typeof DiccionarioRoute
   FavoritosRoute: typeof FavoritosRoute
@@ -122,6 +135,13 @@ declare module '@tanstack/react-router' {
       path: '/ajustes'
       fullPath: '/ajustes'
       preLoaderRoute: typeof AjustesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/auth': {
+      id: '/auth'
+      path: '/auth'
+      fullPath: '/auth'
+      preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/conversacion': {
@@ -158,6 +178,7 @@ declare module '@tanstack/react-router' {
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AjustesRoute: AjustesRoute,
+  AuthRoute: AuthRoute,
   ConversacionRoute: ConversacionRoute,
   DiccionarioRoute: DiccionarioRoute,
   FavoritosRoute: FavoritosRoute,
