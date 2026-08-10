@@ -125,7 +125,7 @@ function TranslatorPage() {
           variant="secondary"
           disabled={!result?.translation}
           onClick={() => {
-            const s = speechFor(result?.direction ?? direction, result?.translation, result?.pronunciation);
+            const s = speechFor(direction, result?.translation, result?.pronunciation);
             playSpeech(s.text, s.style).catch(() => toast.error("No se pudo reproducir el audio"));
           }}
         >
