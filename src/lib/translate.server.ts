@@ -146,9 +146,13 @@ export async function aiSuggest(text: string, direction: Direction, context: str
   }
 }
 
-export async function synthesize(text: string) {
+export async function synthesize(text: string, style: "phonetic" | "natural" = "phonetic") {
   const key = process.env["LOVABLE_API_KEY"];
   if (!key) throw new Error("Falta la clave de IA");
+  const instructions =
+    style === "natural"
+      ? "Lee el texto en español de España con voz natural, clara y a velocidad normal."
+      : "Lee el texto con fonética española, sílaba a sílaba, con claridad y ritmo pausado.";
   const res = await fetch("https://ai.gateway.lovable.dev/v1/audio/speech", {
     method: "POST",
     headers: { Authorization: `Bearer ${key}`, "Content-Type": "application/json" },
@@ -156,7 +160,7 @@ export async function synthesize(text: string) {
       model: "openai/gpt-4o-mini-tts",
       voice: "alloy",
       input: text,
-      instructions: "Lee el texto con fonética española, sílaba a sílaba, con claridad y ritmo pausado.",
+      instructions,
       response_format: "mp3",
     }),
   });
