@@ -74,10 +74,17 @@ export const translateText = createServerFn({ method: "POST" })
   });
 
 export const speakText = createServerFn({ method: "POST" })
-  .inputValidator((input: unknown) => z.object({ text: z.string().trim().min(1).max(600) }).parse(input))
+  .inputValidator((input: unknown) =>
+    z
+      .object({
+        text: z.string().trim().min(1).max(600),
+        style: z.enum(["phonetic", "natural"]).default("phonetic"),
+      })
+      .parse(input),
+  )
   .handler(async ({ data }) => {
     const { synthesize } = await import("./translate.server");
-    return { audio: await synthesize(data.text) };
+    return { audio: await synthesize(data.text, data.style) };
   });
 
 export const transcribeAudio = createServerFn({ method: "POST" })

@@ -8,7 +8,7 @@ import { AppShell } from "@/components/AppShell";
 import { ConfidenceBadge } from "@/components/ConfidenceBadge";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { playSpeech, useRecorder } from "@/lib/audio";
+import { playSpeech, speechFor, useRecorder } from "@/lib/audio";
 import { makeId, useFavorites, useHistory, type Direction } from "@/lib/localStore";
 import { translateText } from "@/lib/translate.functions";
 
@@ -124,11 +124,10 @@ function TranslatorPage() {
         <Button
           variant="secondary"
           disabled={!result?.translation}
-          onClick={() =>
-            playSpeech(result?.pronunciation || result?.translation || "").catch(() =>
-              toast.error("No se pudo reproducir el audio"),
-            )
-          }
+          onClick={() => {
+            const s = speechFor(result?.direction ?? direction, result?.translation, result?.pronunciation);
+            playSpeech(s.text, s.style).catch(() => toast.error("No se pudo reproducir el audio"));
+          }}
         >
           <Volume2 className="size-4" /> Escuchar
         </Button>
@@ -243,11 +242,10 @@ function TranslatorPage() {
                   <Button
                     size="sm"
                     variant="secondary"
-                    onClick={() =>
-                      playSpeech(item.pronunciation || item.output).catch(() =>
-                        toast.error("No se pudo reproducir"),
-                      )
-                    }
+                    onClick={() => {
+                      const s = speechFor(item.direction, item.output, item.pronunciation);
+                      playSpeech(s.text, s.style).catch(() => toast.error("No se pudo reproducir"));
+                    }}
                   >
                     <Volume2 className="size-4" />
                   </Button>

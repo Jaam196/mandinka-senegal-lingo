@@ -3,8 +3,21 @@ import { speakText, transcribeAudio } from "./translate.functions";
 
 let currentAudio: HTMLAudioElement | null = null;
 
-export async function playSpeech(text: string) {
-  const { audio } = await speakText({ data: { text } });
+export type SpeechStyle = "phonetic" | "natural";
+
+/** Chooses what to read aloud: Spanish output is read naturally, Mandinka uses the phonetic guide. */
+export function speechFor(
+  direction: "es-mnk" | "mnk-es",
+  translation: string | null | undefined,
+  pronunciation?: string | null,
+): { text: string; style: SpeechStyle } {
+  if (direction === "mnk-es") return { text: translation ?? "", style: "natural" };
+  return { text: pronunciation || translation || "", style: "phonetic" };
+}
+
+export async function playSpeech(text: string, style: SpeechStyle = "phonetic") {
+  if (!text.trim()) throw new Error("No hay texto para reproducir");
+  const { audio } = await speakText({ data: { text, style } });
   currentAudio?.pause();
   const el = new Audio(`data:audio/mpeg;base64,${audio}`);
   currentAudio = el;

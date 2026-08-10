@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { AppShell } from "@/components/AppShell";
 import { ConfidenceBadge } from "@/components/ConfidenceBadge";
 import { Button } from "@/components/ui/button";
-import { playSpeech, useRecorder } from "@/lib/audio";
+import { playSpeech, speechFor, useRecorder } from "@/lib/audio";
 import { makeId, useHistory, type Direction } from "@/lib/localStore";
 import { translateText } from "@/lib/translate.functions";
 
@@ -67,7 +67,8 @@ function ConversationPage() {
           direction,
           confidence: result.confidence,
         });
-        void playSpeech(result.pronunciation || result.translation).catch(() => undefined);
+        const s = speechFor(direction, result.translation, result.pronunciation);
+        void playSpeech(s.text, s.style).catch(() => undefined);
       }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "No se pudo traducir");
@@ -143,11 +144,10 @@ function ConversationPage() {
                 size="sm"
                 variant="secondary"
                 className="mt-3"
-                onClick={() =>
-                  playSpeech(turn.pronunciation || turn.translation!).catch(() =>
-                    toast.error("No se pudo reproducir"),
-                  )
-                }
+                onClick={() => {
+                  const s = speechFor(turn.direction, turn.translation, turn.pronunciation);
+                  playSpeech(s.text, s.style).catch(() => toast.error("No se pudo reproducir"));
+                }}
               >
                 <Volume2 className="size-4" /> Escuchar
               </Button>
