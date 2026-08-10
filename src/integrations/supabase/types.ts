@@ -14,6 +14,51 @@ export type Database = {
   }
   public: {
     Tables: {
+      audio_cache: {
+        Row: {
+          byte_size: number
+          cache_key: string
+          created_at: string
+          data_base64: string
+          id: string
+          language_code: string | null
+          mime_type: string
+          provider: string
+          speed: string
+          text: string
+          verified: boolean
+          voice: string | null
+        }
+        Insert: {
+          byte_size?: number
+          cache_key: string
+          created_at?: string
+          data_base64: string
+          id?: string
+          language_code?: string | null
+          mime_type?: string
+          provider: string
+          speed?: string
+          text: string
+          verified?: boolean
+          voice?: string | null
+        }
+        Update: {
+          byte_size?: number
+          cache_key?: string
+          created_at?: string
+          data_base64?: string
+          id?: string
+          language_code?: string | null
+          mime_type?: string
+          provider?: string
+          speed?: string
+          text?: string
+          verified?: boolean
+          voice?: string | null
+        }
+        Relationships: []
+      }
       categories: {
         Row: {
           created_at: string
@@ -40,6 +85,50 @@ export type Database = {
           sort_order?: number
         }
         Relationships: []
+      }
+      concepts: {
+        Row: {
+          category_slug: string | null
+          created_at: string
+          gloss_en: string | null
+          gloss_es: string
+          id: string
+          kind: string
+          notes: string | null
+          slug: string
+          updated_at: string
+        }
+        Insert: {
+          category_slug?: string | null
+          created_at?: string
+          gloss_en?: string | null
+          gloss_es: string
+          id?: string
+          kind?: string
+          notes?: string | null
+          slug: string
+          updated_at?: string
+        }
+        Update: {
+          category_slug?: string | null
+          created_at?: string
+          gloss_en?: string | null
+          gloss_es?: string
+          id?: string
+          kind?: string
+          notes?: string | null
+          slug?: string
+          updated_at?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "concepts_category_slug_fkey"
+            columns: ["category_slug"]
+            isOneToOne: false
+            referencedRelation: "categories"
+            referencedColumns: ["slug"]
+          },
+        ]
       }
       dictionary_entries: {
         Row: {
@@ -130,6 +219,45 @@ export type Database = {
           },
         ]
       }
+      languages: {
+        Row: {
+          code: string
+          created_at: string
+          family: string | null
+          flag: string
+          name: string
+          native_name: string | null
+          region: string | null
+          sort_order: number
+          tts_locale: string | null
+          tts_supported: boolean
+        }
+        Insert: {
+          code: string
+          created_at?: string
+          family?: string | null
+          flag?: string
+          name: string
+          native_name?: string | null
+          region?: string | null
+          sort_order?: number
+          tts_locale?: string | null
+          tts_supported?: boolean
+        }
+        Update: {
+          code?: string
+          created_at?: string
+          family?: string | null
+          flag?: string
+          name?: string
+          native_name?: string | null
+          region?: string | null
+          sort_order?: number
+          tts_locale?: string | null
+          tts_supported?: boolean
+        }
+        Relationships: []
+      }
       phrases: {
         Row: {
           category_slug: string | null
@@ -177,6 +305,176 @@ export type Database = {
           },
         ]
       }
+      term_revisions: {
+        Row: {
+          change_type: string
+          changed_by: string | null
+          created_at: string
+          id: string
+          next: Json | null
+          previous: Json | null
+          reason: string | null
+          source_name: string | null
+          term_id: string | null
+        }
+        Insert: {
+          change_type?: string
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          next?: Json | null
+          previous?: Json | null
+          reason?: string | null
+          source_name?: string | null
+          term_id?: string | null
+        }
+        Update: {
+          change_type?: string
+          changed_by?: string | null
+          created_at?: string
+          id?: string
+          next?: Json | null
+          previous?: Json | null
+          reason?: string | null
+          source_name?: string | null
+          term_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "term_revisions_term_id_fkey"
+            columns: ["term_id"]
+            isOneToOne: false
+            referencedRelation: "terms"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      terms: {
+        Row: {
+          alternative_meanings: string[]
+          concept_id: string
+          confidence: string
+          created_at: string
+          example_text: string | null
+          example_translation: string | null
+          id: string
+          ipa: string | null
+          language_code: string
+          normalized: string | null
+          notes: string | null
+          part_of_speech: string | null
+          pronunciation: string | null
+          region: string | null
+          source_date: string | null
+          source_name: string | null
+          source_type: string | null
+          source_url: string | null
+          synonyms: string[]
+          text: string
+          updated_at: string
+          verified: boolean
+        }
+        Insert: {
+          alternative_meanings?: string[]
+          concept_id: string
+          confidence?: string
+          created_at?: string
+          example_text?: string | null
+          example_translation?: string | null
+          id?: string
+          ipa?: string | null
+          language_code: string
+          normalized?: string | null
+          notes?: string | null
+          part_of_speech?: string | null
+          pronunciation?: string | null
+          region?: string | null
+          source_date?: string | null
+          source_name?: string | null
+          source_type?: string | null
+          source_url?: string | null
+          synonyms?: string[]
+          text: string
+          updated_at?: string
+          verified?: boolean
+        }
+        Update: {
+          alternative_meanings?: string[]
+          concept_id?: string
+          confidence?: string
+          created_at?: string
+          example_text?: string | null
+          example_translation?: string | null
+          id?: string
+          ipa?: string | null
+          language_code?: string
+          normalized?: string | null
+          notes?: string | null
+          part_of_speech?: string | null
+          pronunciation?: string | null
+          region?: string | null
+          source_date?: string | null
+          source_name?: string | null
+          source_type?: string | null
+          source_url?: string | null
+          synonyms?: string[]
+          text?: string
+          updated_at?: string
+          verified?: boolean
+        }
+        Relationships: [
+          {
+            foreignKeyName: "terms_concept_id_fkey"
+            columns: ["concept_id"]
+            isOneToOne: false
+            referencedRelation: "concepts"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "terms_language_code_fkey"
+            columns: ["language_code"]
+            isOneToOne: false
+            referencedRelation: "languages"
+            referencedColumns: ["code"]
+          },
+        ]
+      }
+      unknown_words: {
+        Row: {
+          first_seen: string
+          id: string
+          language_code: string | null
+          last_seen: string
+          normalized: string
+          priority: number
+          resolved: boolean
+          search_count: number
+          text: string
+        }
+        Insert: {
+          first_seen?: string
+          id?: string
+          language_code?: string | null
+          last_seen?: string
+          normalized: string
+          priority?: number
+          resolved?: boolean
+          search_count?: number
+          text: string
+        }
+        Update: {
+          first_seen?: string
+          id?: string
+          language_code?: string | null
+          last_seen?: string
+          normalized?: string
+          priority?: number
+          resolved?: boolean
+          search_count?: number
+          text?: string
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string
@@ -210,6 +508,11 @@ export type Database = {
         }
         Returns: boolean
       }
+      log_unknown_word: {
+        Args: { _language_code: string; _text: string }
+        Returns: undefined
+      }
+      normalize_term: { Args: { _text: string }; Returns: string }
     }
     Enums: {
       app_role: "admin" | "editor" | "user"
