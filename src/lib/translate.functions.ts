@@ -8,15 +8,18 @@ export const translateText = createServerFn({ method: "POST" })
     z
       .object({
         text: z.string().trim().min(1).max(1200),
-        sourceLang: langCode,
-        targetLang: langCode,
+        sourceLang: langCode.optional(),
+        targetLang: langCode.optional(),
+        direction: z.enum(["es-mnk", "mnk-es"]).optional(),
         allowAi: z.boolean().default(true),
       })
       .parse(input),
   )
   .handler(async ({ data }) => {
     const mod = await import("./translate.server");
-    const { text, sourceLang, targetLang } = data;
+    const { text } = data;
+    const sourceLang = data.sourceLang ?? (data.direction === "mnk-es" ? "mnk-sn" : "es");
+    const targetLang = data.targetLang ?? (data.direction === "mnk-es" ? "es" : "mnk-sn");
 
     if (sourceLang === targetLang) {
       return {

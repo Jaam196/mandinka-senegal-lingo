@@ -22,7 +22,37 @@ function base64ToBlobUrl(base64: string, mime: string) {
 }
 
 /** Generates (or reuses) audio, verifies it really plays and reports the true error otherwise. */
-export async function playSpeech(request: SpeakRequest): Promise<{ notice: string | null }> {
+export type LegacyStyle = "phonetic" | "natural";
+export type Direction = "es-mnk" | "mnk-es";
+
+/** Compatibilidad con las pantallas anteriores (mandinka de Senegal / español). */
+export function speechFor(direction: string, translation?: string | null, pronunciation?: string | null) {
+  const toSpanish = direction === "mnk-es";
+  return {
+    text: (translation ?? "").trim(),
+    style: (toSpanish ? "natural" : "phonetic") as LegacyStyle,
+    languageCode: toSpanish ? "es" : "mnk-sn",
+    pronunciation: pronunciation ?? null,
+  };
+}
+
+export async function playSpeech(
+  input: SpeakRequest | string,
+  legacy?: LegacyStyle | null,
+  pronunciation?: string | null,
+): Promise<{ notice: string | null }> {
+  const request: SpeakRequest =
+    typeof input === "string"
+      ? {
+          text: input,
+          languageCode: legacy === "natural" ? "es" : "mnk-sn",
+          pronunciation: pronunciation ?? (legacy === "phonetic" ? input : null),
+        }
+      : input;
+  return playSpeechRequest(request);
+}
+
+async function playSpeechRequest(request: SpeakRequest): Promise<{ notice: string | null }> {
   if (!request.text.trim() && !request.pronunciation?.trim()) {
     throw new Error("No hay texto para reproducir.");
   }
