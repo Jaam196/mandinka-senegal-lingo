@@ -1,0 +1,1 @@
+REVOKE ALL ON FUNCTION public.log_term_revision() FROM public, anon, authenticated;
