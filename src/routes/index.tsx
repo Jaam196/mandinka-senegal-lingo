@@ -6,10 +6,11 @@ import { toast } from "sonner";
 
 import { AppShell } from "@/components/AppShell";
 import { ConfidenceBadge } from "@/components/ConfidenceBadge";
+import { LanguageSelect } from "@/components/LanguageSelect";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
-import { playSpeech, speechFor, useRecorder } from "@/lib/audio";
-import { makeId, useFavorites, useHistory, type Direction } from "@/lib/localStore";
+import { playSpeech, useRecorder } from "@/lib/audio";
+import { makeId, useFavorites, useHistory } from "@/lib/localStore";
 import { translateText } from "@/lib/translate.functions";
 
 export const Route = createFileRoute("/")({
@@ -34,7 +35,8 @@ export const Route = createFileRoute("/")({
 type Result = Awaited<ReturnType<typeof translateText>>;
 
 function TranslatorPage() {
-  const [direction, setDirection] = useState<Direction>("es-mnk");
+  const [sourceLang, setSourceLang] = useState("es");
+  const [targetLang, setTargetLang] = useState("mnk-sn");
   const [text, setText] = useState("");
   const [result, setResult] = useState<Result | null>(null);
   const history = useHistory();
@@ -46,7 +48,7 @@ function TranslatorPage() {
   );
 
   const mutation = useMutation({
-    mutationFn: () => translateText({ data: { text: text.trim(), direction, allowAi: true } }),
+    mutationFn: () => translateText({ data: { text: text.trim(), sourceLang, targetLang, allowAi: true } }),
     onSuccess: (data) => {
       setResult(data);
       if (data.translation) {
@@ -56,15 +58,15 @@ function TranslatorPage() {
           input: data.input,
           output: data.translation,
           pronunciation: data.pronunciation,
-          direction,
+          direction: `${sourceLang}>${targetLang}`,
+          sourceLang,
+          targetLang,
           confidence: data.confidence,
         });
       }
     },
     onError: (error: Error) => toast.error(error.message || "No se pudo traducir"),
   });
-
-  const labels = direction === "es-mnk" ? ["Español 🇪🇸", "Mandinka 🇸🇳"] : ["Mandinka 🇸🇳", "Español 🇪🇸"];
 
   return (
     <AppShell>
@@ -79,23 +81,36 @@ function TranslatorPage() {
       </div>
 
       <div className="mt-4 flex items-center justify-center gap-3 rounded-2xl border border-border bg-card p-2">
-        <span className="flex-1 rounded-xl bg-secondary px-3 py-2 text-center text-sm font-semibold">
-          {labels[0]}
-        </span>
+        <LanguageSelect
+          label="Idioma de origen"
+          value={sourceLang}
+          exclude={targetLang}
+          onChange={(code) => {
+            setSourceLang(code);
+            setResult(null);
+          }}
+        />
         <Button
           variant="ghost"
           size="icon"
           aria-label="Invertir idiomas"
           onClick={() => {
-            setDirection((d) => (d === "es-mnk" ? "mnk-es" : "es-mnk"));
+            setSourceLang(targetLang);
+            setTargetLang(sourceLang);
             setResult(null);
           }}
         >
           <ArrowLeftRight className="size-5" />
         </Button>
-        <span className="flex-1 rounded-xl bg-secondary px-3 py-2 text-center text-sm font-semibold">
-          {labels[1]}
-        </span>
+        <LanguageSelect
+          label="Idioma de destino"
+          value={targetLang}
+          exclude={sourceLang}
+          onChange={(code) => {
+            setTargetLang(code);
+            setResult(null);
+          }}
+        />
       </div>
 
       <Textarea
@@ -125,8 +140,11 @@ function TranslatorPage() {
           variant="secondary"
           disabled={!result?.translation}
           onClick={() => {
-            const s = speechFor(direction, result?.translation, result?.pronunciation);
-            playSpeech(s.text, s.style).catch(() => toast.error("No se pudo reproducir el audio"));
+            playSpeech({
+              text: result?.translation ?? "",
+              languageCode: targetLang,
+              pronunciation: result?.pronunciation ?? null,
+            }).catch(() => toast.error("No se pudo reproducir el audio"));
           }}
         >
           <Volume2 className="size-4" /> Escuchar
@@ -153,7 +171,9 @@ function TranslatorPage() {
               input: result.input,
               output: result.translation,
               pronunciation: result.pronunciation,
-              direction,
+              direction: `${sourceLang}>${targetLang}`,
+              sourceLang,
+              targetLang,
               confidence: result.confidence,
             });
             toast.success("Guardado en favoritos");
@@ -231,7 +251,7 @@ function TranslatorPage() {
               <li key={item.id} className="rounded-2xl border border-border bg-card p-3">
                 <p className="text-xs text-muted-foreground">
                   {new Date(item.date).toLocaleString("es-ES")} ·{" "}
-                  {item.direction === "es-mnk" ? "ES → MNK" : "MNK → ES"}
+                  {(item.sourceLang ?? "es").toUpperCase()} → {(item.targetLang ?? "mnk-sn").toUpperCase()}
                 </p>
                 <p className="text-sm">{item.input}</p>
                 <p className="font-medium">{item.output}</p>
@@ -243,8 +263,11 @@ function TranslatorPage() {
                     size="sm"
                     variant="secondary"
                     onClick={() => {
-                      const s = speechFor(item.direction, item.output, item.pronunciation);
-                      playSpeech(s.text, s.style).catch(() => toast.error("No se pudo reproducir"));
+                      playSpeech({
+                        text: item.output,
+                        languageCode: item.targetLang ?? null,
+                        pronunciation: item.pronunciation,
+                      }).catch(() => toast.error("No se pudo reproducir"));
                     }}
                   >
                     <Volume2 className="size-4" />

@@ -1,6 +1,6 @@
 import { useCallback, useEffect, useState } from "react";
 
-export type Direction = "es-mnk" | "mnk-es";
+export type Direction = string;
 
 export type HistoryItem = {
   id: string;
@@ -9,6 +9,8 @@ export type HistoryItem = {
   output: string;
   pronunciation: string | null;
   direction: Direction;
+  sourceLang?: string;
+  targetLang?: string;
   confidence: string;
 };
 

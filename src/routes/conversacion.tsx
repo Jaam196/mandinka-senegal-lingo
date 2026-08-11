@@ -5,9 +5,10 @@ import { toast } from "sonner";
 
 import { AppShell } from "@/components/AppShell";
 import { ConfidenceBadge } from "@/components/ConfidenceBadge";
+import { LanguageSelect } from "@/components/LanguageSelect";
 import { Button } from "@/components/ui/button";
-import { playSpeech, speechFor, useRecorder } from "@/lib/audio";
-import { makeId, useHistory, type Direction } from "@/lib/localStore";
+import { playSpeech, useRecorder } from "@/lib/audio";
+import { makeId, useHistory } from "@/lib/localStore";
 import { translateText } from "@/lib/translate.functions";
 
 export const Route = createFileRoute("/conversacion")({
@@ -31,26 +32,34 @@ export const Route = createFileRoute("/conversacion")({
 
 type Turn = {
   id: string;
-  direction: Direction;
+  sourceLang: string;
+  targetLang: string;
   original: string;
   translation: string | null;
   pronunciation: string | null;
   confidence: string;
 };
 
+function shortLabel(code: string) {
+  return code.toUpperCase();
+}
+
 function ConversationPage() {
   const [turns, setTurns] = useState<Turn[]>([]);
-  const [active, setActive] = useState<Direction>("es-mnk");
+  const [langA, setLangA] = useState("es");
+  const [langB, setLangB] = useState("mnk-sn");
+  const [activeSide, setActiveSide] = useState<"a" | "b">("a");
   const [pending, setPending] = useState(false);
   const history = useHistory();
 
-  async function handleText(text: string, direction: Direction) {
+  async function handleText(text: string, sourceLang: string, targetLang: string) {
     setPending(true);
     try {
-      const result = await translateText({ data: { text, direction, allowAi: true } });
+      const result = await translateText({ data: { text, sourceLang, targetLang, allowAi: true } });
       const turn: Turn = {
         id: makeId(),
-        direction,
+        sourceLang,
+        targetLang,
         original: text,
         translation: result.translation,
         pronunciation: result.pronunciation,
@@ -64,11 +73,16 @@ function ConversationPage() {
           input: text,
           output: result.translation,
           pronunciation: result.pronunciation,
-          direction,
+          direction: `${sourceLang}>${targetLang}`,
+          sourceLang,
+          targetLang,
           confidence: result.confidence,
         });
-        const s = speechFor(direction, result.translation, result.pronunciation);
-        void playSpeech(s.text, s.style).catch(() => undefined);
+        void playSpeech({
+          text: result.translation,
+          languageCode: targetLang,
+          pronunciation: result.pronunciation,
+        }).catch(() => undefined);
       }
     } catch (error) {
       toast.error(error instanceof Error ? error.message : "No se pudo traducir");
@@ -78,7 +92,8 @@ function ConversationPage() {
   }
 
   const recorder = useRecorder(
-    (text) => void handleText(text, active),
+    (text) =>
+      void handleText(text, activeSide === "a" ? langA : langB, activeSide === "a" ? langB : langA),
     (message) => toast.error(message),
   );
 
@@ -89,15 +104,20 @@ function ConversationPage() {
         Elige quién habla, mantén la grabación y suelta para traducir.
       </p>
 
-      <div className="mt-4 grid grid-cols-2 gap-3">
-        {(["es-mnk", "mnk-es"] as Direction[]).map((dir) => (
+      <div className="mt-4 flex gap-3">
+        <LanguageSelect label="Idioma A" value={langA} exclude={langB} onChange={setLangA} />
+        <LanguageSelect label="Idioma B" value={langB} exclude={langA} onChange={setLangB} />
+      </div>
+
+      <div className="mt-3 grid grid-cols-2 gap-3">
+        {(["a", "b"] as const).map((side) => (
           <Button
-            key={dir}
-            variant={active === dir ? "default" : "secondary"}
+            key={side}
+            variant={activeSide === side ? "default" : "secondary"}
             className="h-14 rounded-2xl text-base"
-            onClick={() => setActive(dir)}
+            onClick={() => setActiveSide(side)}
           >
-            {dir === "es-mnk" ? "🇪🇸 Español" : "🇸🇳 Mandinka"}
+            Habla {shortLabel(side === "a" ? langA : langB)}
           </Button>
         ))}
       </div>
@@ -122,13 +142,13 @@ function ConversationPage() {
         {turns.map((turn) => (
           <li key={turn.id} className="rounded-2xl border border-border bg-card p-4">
             <p className="text-xs text-muted-foreground">
-              👤 {turn.direction === "es-mnk" ? "Español" : "Mandinka"}
+              👤 {shortLabel(turn.sourceLang)}
             </p>
             <p className="text-sm">{turn.original}</p>
             <div className="mt-3 flex items-start justify-between gap-3">
               <div>
                 <p className="text-xs text-muted-foreground">
-                  🤖 {turn.direction === "es-mnk" ? "Mandinka" : "Español"}
+                  🤖 {shortLabel(turn.targetLang)}
                 </p>
                 <p className="text-lg font-semibold">
                   {turn.translation ?? "⚠️ Sin traducción verificada"}
@@ -145,8 +165,11 @@ function ConversationPage() {
                 variant="secondary"
                 className="mt-3"
                 onClick={() => {
-                  const s = speechFor(turn.direction, turn.translation, turn.pronunciation);
-                  playSpeech(s.text, s.style).catch(() => toast.error("No se pudo reproducir"));
+                  playSpeech({
+                    text: turn.translation ?? "",
+                    languageCode: turn.targetLang,
+                    pronunciation: turn.pronunciation,
+                  }).catch(() => toast.error("No se pudo reproducir"));
                 }}
               >
                 <Volume2 className="size-4" /> Escuchar

@@ -5,7 +5,7 @@ import { toast } from "sonner";
 import { AppShell } from "@/components/AppShell";
 import { ConfidenceBadge } from "@/components/ConfidenceBadge";
 import { Button } from "@/components/ui/button";
-import { playSpeech, speechFor } from "@/lib/audio";
+import { playSpeech } from "@/lib/audio";
 import { useFavorites } from "@/lib/localStore";
 
 export const Route = createFileRoute("/favoritos")({
@@ -53,8 +53,11 @@ function FavoritesPage() {
                   size="sm"
                   variant="secondary"
                   onClick={() => {
-                    const s = speechFor(item.direction, item.output, item.pronunciation);
-                    playSpeech(s.text, s.style).catch(() => toast.error("No se pudo reproducir"));
+                    playSpeech({
+                      text: item.output,
+                      languageCode: item.targetLang ?? null,
+                      pronunciation: item.pronunciation,
+                    }).catch(() => toast.error("No se pudo reproducir"));
                   }}
                 >
                   <Volume2 className="size-4" /> Escuchar
