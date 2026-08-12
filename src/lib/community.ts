@@ -61,7 +61,8 @@ export type CommunityTranslation = {
   translation_versions: CommunityVersion[];
 };
 
-const SELECT = "*, translation_versions(*, translation_confirmations(*))";
+const SELECT =
+  "*, translation_versions!translation_versions_translation_id_fkey(*, translation_confirmations(*))";
 
 export function sortedVersions(entry: CommunityTranslation | null | undefined) {
   return [...(entry?.translation_versions ?? [])].sort((a, b) => b.version_number - a.version_number);
@@ -195,7 +196,7 @@ export function useCommunityChanges(limit = 100) {
       const { data, error } = await supabase
         .from("translation_versions")
         .select(
-          "*, translation_confirmations(*), community_translations(id,source_lang,target_lang,current_version_id)",
+          "*, translation_confirmations(*), community_translations!translation_versions_translation_id_fkey(id,source_lang,target_lang,current_version_id)",
         )
         .order("created_at", { ascending: false })
         .limit(limit);
