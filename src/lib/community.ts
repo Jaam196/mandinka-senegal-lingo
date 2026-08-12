@@ -132,8 +132,8 @@ export function useSaveCommunityTranslation() {
         _source_lang: input.sourceLang,
         _target_lang: input.targetLang,
         _translation: input.translation,
-        _pronunciation: input.pronunciation || null,
-        _notes: input.notes || null,
+        _pronunciation: input.pronunciation || "",
+        _notes: input.notes || "",
         _device_id: getDeviceId(),
         _display_name: getDisplayName() || "Anónimo",
       });
