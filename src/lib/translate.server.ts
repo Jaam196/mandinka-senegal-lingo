@@ -137,6 +137,39 @@ export async function lookupPair(
   };
 }
 
+/** Ediciones colaborativas: siempre tienen prioridad sobre el diccionario base. */
+export async function lookupCommunity(
+  text: string,
+  sourceLang: string,
+  targetLang: string,
+): Promise<TranslationResult | null> {
+  const supabase = db();
+  const { data } = await supabase
+    .from("community_translations")
+    .select("source_text, translation, pronunciation, notes, updated_by_name, updated_at")
+    .eq("source_normalized", normalize(text))
+    .eq("source_lang", sourceLang)
+    .eq("target_lang", targetLang)
+    .maybeSingle();
+  if (!data) return null;
+  return {
+    input: text,
+    sourceLang,
+    targetLang,
+    translation: data.translation,
+    pronunciation: data.pronunciation,
+    ipa: null,
+    confidence: "high_confidence",
+    source: `Comunidad · última edición de ${data.updated_by_name || "Anónimo"}`,
+    matchType: "dictionary",
+    method: "direct",
+    pivotLang: null,
+    alternatives: [],
+    glossary: [],
+    notes: data.notes,
+  };
+}
+
 /** Indirect route through a pivot language when no direct pair exists. */
 export async function lookupPivot(
   text: string,
