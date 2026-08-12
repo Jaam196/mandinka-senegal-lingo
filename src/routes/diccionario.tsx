@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
-import { Loader2, Star, Volume2 } from "lucide-react";
+import { Loader2, Plus, Star, Users, Volume2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/AppShell";
+import { CommunityPanel } from "@/components/CommunityPanel";
 import { ConfidenceBadge } from "@/components/ConfidenceBadge";
+import { TranslationEditorDialog } from "@/components/TranslationEditorDialog";
 import { LanguageSelect } from "@/components/LanguageSelect";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -43,6 +45,8 @@ function DictionaryPage() {
   const categories = useCategories();
   const { data: languages = [] } = useLanguages();
   const favorites = useFavorites();
+  const [adding, setAdding] = useState(false);
+  const [openCommunity, setOpenCommunity] = useState<string | null>(null);
 
   const labelOf = (code: string) => {
     const l = languages.find((x) => x.code === code);
@@ -74,6 +78,24 @@ function DictionaryPage() {
       <p className="mt-1 text-sm text-muted-foreground">
         Busca en cualquier idioma. Elige uno concreto o consulta todos a la vez.
       </p>
+
+      <Button className="mt-3 w-full rounded-2xl" variant="secondary" onClick={() => setAdding(true)}>
+        <Plus className="size-4" /> Añadir traducción
+      </Button>
+
+      <TranslationEditorDialog
+        open={adding}
+        onOpenChange={setAdding}
+        mode="new"
+        initial={{
+          sourceText: query.trim(),
+          sourceLang: "es",
+          targetLang: lang === ALL ? "mnk-sn" : lang,
+          translation: "",
+          pronunciation: "",
+          notes: "",
+        }}
+      />
 
       <Input
         value={query}
@@ -218,7 +240,26 @@ function DictionaryPage() {
                       >
                         <Star className="size-4" /> Guardar
                       </Button>
+                      <Button
+                        size="sm"
+                        variant="ghost"
+                        onClick={() => setOpenCommunity(openCommunity === term.id ? null : term.id)}
+                      >
+                        <Users className="size-4" /> Comunidad
+                      </Button>
                     </div>
+                    {openCommunity === term.id ? (
+                      <CommunityPanel
+                        sourceText={concept.gloss_es}
+                        sourceLang="es"
+                        targetLang={term.language_code}
+                        fallback={{
+                          translation: term.text,
+                          pronunciation: term.pronunciation,
+                          notes: term.notes,
+                        }}
+                      />
+                    ) : null}
                   </li>
                 ))}
               </ul>
