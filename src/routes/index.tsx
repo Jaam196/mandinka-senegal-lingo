@@ -1,10 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
 import { useMutation } from "@tanstack/react-query";
 import { useState } from "react";
-import { ArrowLeftRight, Copy, Loader2, Mic, Square, Star, Volume2 } from "lucide-react";
+import { ArrowLeftRight, Copy, Loader2, Mic, Plus, Square, Star, Volume2 } from "lucide-react";
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/AppShell";
+import { CommunityPanel } from "@/components/CommunityPanel";
+import { TranslationEditorDialog } from "@/components/TranslationEditorDialog";
 import { ConfidenceBadge } from "@/components/ConfidenceBadge";
 import { LanguageSelect } from "@/components/LanguageSelect";
 import { Button } from "@/components/ui/button";
@@ -39,6 +41,7 @@ function TranslatorPage() {
   const [targetLang, setTargetLang] = useState("mnk-sn");
   const [text, setText] = useState("");
   const [result, setResult] = useState<Result | null>(null);
+  const [adding, setAdding] = useState(false);
   const history = useHistory();
   const favorites = useFavorites();
 
@@ -223,6 +226,17 @@ function TranslatorPage() {
             </p>
           )}
 
+          <CommunityPanel
+            sourceText={result.input}
+            sourceLang={sourceLang}
+            targetLang={targetLang}
+            fallback={{
+              translation: result.translation ?? "",
+              pronunciation: result.pronunciation,
+              notes: result.notes,
+            }}
+          />
+
           {result.alternatives.length > 0 ? (
             <div className="mt-4">
               <p className="text-sm font-semibold">Palabras reconocidas</p>
@@ -237,6 +251,26 @@ function TranslatorPage() {
           ) : null}
         </section>
       ) : null}
+
+      <div className="mt-4">
+        <Button variant="secondary" className="w-full rounded-2xl" onClick={() => setAdding(true)}>
+          <Plus className="size-4" /> Añadir traducción
+        </Button>
+      </div>
+
+      <TranslationEditorDialog
+        open={adding}
+        onOpenChange={setAdding}
+        mode="new"
+        initial={{
+          sourceText: text.trim(),
+          sourceLang,
+          targetLang,
+          translation: result?.translation ?? "",
+          pronunciation: result?.pronunciation ?? "",
+          notes: "",
+        }}
+      />
 
       {history.items.length > 0 ? (
         <section className="mt-6">

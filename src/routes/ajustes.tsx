@@ -4,7 +4,9 @@ import { toast } from "sonner";
 
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
+import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
+import { useIdentity } from "@/lib/identity";
 import { clearAllLocalData, useFavorites, useHistory } from "@/lib/localStore";
 
 export const Route = createFileRoute("/ajustes")({
@@ -26,6 +28,10 @@ function SettingsPage() {
   const [dark, setDark] = useState(false);
   const history = useHistory();
   const favorites = useFavorites();
+  const identity = useIdentity();
+  const [name, setName] = useState("");
+
+  useEffect(() => setName(identity.displayName), [identity.displayName]);
 
   useEffect(() => {
     const stored = window.localStorage.getItem("mnk_theme") === "dark";
@@ -50,6 +56,24 @@ function SettingsPage() {
             <p className="text-sm text-muted-foreground">Más cómodo con poca luz.</p>
           </div>
           <Switch checked={dark} onCheckedChange={toggleTheme} />
+        </div>
+
+        <div className="rounded-2xl border border-border bg-card p-4">
+          <p className="font-medium">Tu nombre en la comunidad</p>
+          <p className="mt-1 text-sm text-muted-foreground">
+            Aparece junto a las correcciones y confirmaciones que envíes.
+          </p>
+          <div className="mt-3 flex gap-2">
+            <Input value={name} maxLength={80} placeholder="Anónimo" onChange={(e) => setName(e.target.value)} />
+            <Button
+              onClick={() => {
+                identity.setDisplayName(name);
+                toast.success("Nombre guardado");
+              }}
+            >
+              Guardar
+            </Button>
+          </div>
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-4">
