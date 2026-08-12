@@ -3,6 +3,7 @@ import { useEffect, useMemo, useState } from "react";
 import { useQueryClient } from "@tanstack/react-query";
 import { toast } from "sonner";
 
+import { AdminCommunityChanges } from "@/components/AdminCommunityChanges";
 import { AppShell } from "@/components/AppShell";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -294,6 +295,8 @@ function AdminPage() {
   return (
     <AppShell>
       <h1 className="text-2xl font-bold">🛠️ Administración del diccionario</h1>
+
+      <AdminCommunityChanges />
 
       <section className="mt-4 space-y-3 rounded-2xl border border-border bg-card p-4">
         <h2 className="font-semibold">{form.id ? "Editar entrada" : "Nueva entrada"}</h2>
