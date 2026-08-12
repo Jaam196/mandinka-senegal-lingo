@@ -3,6 +3,7 @@ import { cn } from "@/lib/utils";
 const MAP: Record<string, { label: string; className: string }> = {
   verified: { label: "✅ Confirmada", className: "bg-accent/15 text-accent" },
   probable: { label: "🟡 Probable", className: "bg-gold/25 text-gold-foreground" },
+  high_confidence: { label: "👥 Comunidad", className: "bg-accent/15 text-accent" },
   approximate: { label: "⚠️ Aproximada", className: "bg-primary/15 text-primary" },
   unverified: { label: "🤖 IA · NO VERIFICADA", className: "bg-destructive/15 text-destructive" },
   none: { label: "❌ Sin traducción fiable", className: "bg-muted text-muted-foreground" },

@@ -86,6 +86,71 @@ export type Database = {
         }
         Relationships: []
       }
+      community_translations: {
+        Row: {
+          created_at: string
+          created_by_device: string | null
+          created_by_name: string | null
+          current_version_id: string | null
+          id: string
+          notes: string | null
+          pronunciation: string | null
+          source_lang: string
+          source_normalized: string
+          source_text: string
+          target_lang: string
+          translation: string
+          updated_at: string
+          updated_by_device: string | null
+          updated_by_name: string | null
+          version_number: number
+        }
+        Insert: {
+          created_at?: string
+          created_by_device?: string | null
+          created_by_name?: string | null
+          current_version_id?: string | null
+          id?: string
+          notes?: string | null
+          pronunciation?: string | null
+          source_lang: string
+          source_normalized: string
+          source_text: string
+          target_lang: string
+          translation: string
+          updated_at?: string
+          updated_by_device?: string | null
+          updated_by_name?: string | null
+          version_number?: number
+        }
+        Update: {
+          created_at?: string
+          created_by_device?: string | null
+          created_by_name?: string | null
+          current_version_id?: string | null
+          id?: string
+          notes?: string | null
+          pronunciation?: string | null
+          source_lang?: string
+          source_normalized?: string
+          source_text?: string
+          target_lang?: string
+          translation?: string
+          updated_at?: string
+          updated_by_device?: string | null
+          updated_by_name?: string | null
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "community_translations_current_version_fkey"
+            columns: ["current_version_id"]
+            isOneToOne: false
+            referencedRelation: "translation_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       concepts: {
         Row: {
           category_slug: string | null
@@ -439,6 +504,101 @@ export type Database = {
           },
         ]
       }
+      translation_confirmations: {
+        Row: {
+          confirmed: boolean
+          created_at: string
+          device_id: string
+          display_name: string | null
+          id: string
+          translation_version_id: string
+        }
+        Insert: {
+          confirmed?: boolean
+          created_at?: string
+          device_id: string
+          display_name?: string | null
+          id?: string
+          translation_version_id: string
+        }
+        Update: {
+          confirmed?: boolean
+          created_at?: string
+          device_id?: string
+          display_name?: string | null
+          id?: string
+          translation_version_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "translation_confirmations_translation_version_id_fkey"
+            columns: ["translation_version_id"]
+            isOneToOne: false
+            referencedRelation: "translation_versions"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      translation_versions: {
+        Row: {
+          change_type: string
+          created_at: string
+          device_id: string | null
+          display_name: string | null
+          id: string
+          notes: string | null
+          pronunciation: string | null
+          reverted_from_version_id: string | null
+          source_text: string
+          translation: string
+          translation_id: string
+          version_number: number
+        }
+        Insert: {
+          change_type?: string
+          created_at?: string
+          device_id?: string | null
+          display_name?: string | null
+          id?: string
+          notes?: string | null
+          pronunciation?: string | null
+          reverted_from_version_id?: string | null
+          source_text: string
+          translation: string
+          translation_id: string
+          version_number: number
+        }
+        Update: {
+          change_type?: string
+          created_at?: string
+          device_id?: string | null
+          display_name?: string | null
+          id?: string
+          notes?: string | null
+          pronunciation?: string | null
+          reverted_from_version_id?: string | null
+          source_text?: string
+          translation?: string
+          translation_id?: string
+          version_number?: number
+        }
+        Relationships: [
+          {
+            foreignKeyName: "translation_versions_reverted_from_version_id_fkey"
+            columns: ["reverted_from_version_id"]
+            isOneToOne: false
+            referencedRelation: "translation_versions"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "translation_versions_translation_id_fkey"
+            columns: ["translation_id"]
+            isOneToOne: false
+            referencedRelation: "community_translations"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       unknown_words: {
         Row: {
           first_seen: string
@@ -501,6 +661,15 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
+      confirm_translation_version: {
+        Args: {
+          _confirmed: boolean
+          _device_id: string
+          _display_name: string
+          _version_id: string
+        }
+        Returns: undefined
+      }
       has_role: {
         Args: {
           _role: Database["public"]["Enums"]["app_role"]
@@ -513,6 +682,23 @@ export type Database = {
         Returns: undefined
       }
       normalize_term: { Args: { _text: string }; Returns: string }
+      revert_translation_version: {
+        Args: { _device_id: string; _display_name: string; _version_id: string }
+        Returns: string
+      }
+      save_community_translation: {
+        Args: {
+          _device_id: string
+          _display_name: string
+          _notes: string
+          _pronunciation: string
+          _source_lang: string
+          _source_text: string
+          _target_lang: string
+          _translation: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       app_role: "admin" | "editor" | "user"

@@ -40,6 +40,9 @@ export const translateText = createServerFn({ method: "POST" })
       };
     }
 
+    const community = await mod.lookupCommunity(text, sourceLang, targetLang);
+    if (community) return community;
+
     const direct = await mod.lookupPair(text, sourceLang, targetLang);
     if (direct) return direct;
 
