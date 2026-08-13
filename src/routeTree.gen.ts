@@ -12,7 +12,9 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AjustesRouteImport } from './routes/ajustes'
+import { Route as AprenderRouteImport } from './routes/aprender'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ComunidadRouteImport } from './routes/comunidad'
 import { Route as ConversacionRouteImport } from './routes/conversacion'
 import { Route as DiccionarioRouteImport } from './routes/diccionario'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
@@ -33,9 +35,19 @@ const AjustesRoute = AjustesRouteImport.update({
   path: '/ajustes',
   getParentRoute: () => rootRouteImport,
 } as any)
+const AprenderRoute = AprenderRouteImport.update({
+  id: '/aprender',
+  path: '/aprender',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const AuthRoute = AuthRouteImport.update({
   id: '/auth',
   path: '/auth',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ComunidadRoute = ComunidadRouteImport.update({
+  id: '/comunidad',
+  path: '/comunidad',
   getParentRoute: () => rootRouteImport,
 } as any)
 const ConversacionRoute = ConversacionRouteImport.update({
@@ -63,7 +75,9 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/ajustes': typeof AjustesRoute
+  '/aprender': typeof AprenderRoute
   '/auth': typeof AuthRoute
+  '/comunidad': typeof ComunidadRoute
   '/conversacion': typeof ConversacionRoute
   '/diccionario': typeof DiccionarioRoute
   '/favoritos': typeof FavoritosRoute
@@ -73,7 +87,9 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/ajustes': typeof AjustesRoute
+  '/aprender': typeof AprenderRoute
   '/auth': typeof AuthRoute
+  '/comunidad': typeof ComunidadRoute
   '/conversacion': typeof ConversacionRoute
   '/diccionario': typeof DiccionarioRoute
   '/favoritos': typeof FavoritosRoute
@@ -84,7 +100,9 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRoute
   '/ajustes': typeof AjustesRoute
+  '/aprender': typeof AprenderRoute
   '/auth': typeof AuthRoute
+  '/comunidad': typeof ComunidadRoute
   '/conversacion': typeof ConversacionRoute
   '/diccionario': typeof DiccionarioRoute
   '/favoritos': typeof FavoritosRoute
@@ -96,7 +114,9 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/ajustes'
+    | '/aprender'
     | '/auth'
+    | '/comunidad'
     | '/conversacion'
     | '/diccionario'
     | '/favoritos'
@@ -106,7 +126,9 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/ajustes'
+    | '/aprender'
     | '/auth'
+    | '/comunidad'
     | '/conversacion'
     | '/diccionario'
     | '/favoritos'
@@ -116,7 +138,9 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/ajustes'
+    | '/aprender'
     | '/auth'
+    | '/comunidad'
     | '/conversacion'
     | '/diccionario'
     | '/favoritos'
@@ -127,7 +151,9 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRoute
   AjustesRoute: typeof AjustesRoute
+  AprenderRoute: typeof AprenderRoute
   AuthRoute: typeof AuthRoute
+  ComunidadRoute: typeof ComunidadRoute
   ConversacionRoute: typeof ConversacionRoute
   DiccionarioRoute: typeof DiccionarioRoute
   FavoritosRoute: typeof FavoritosRoute
@@ -157,11 +183,25 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AjustesRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/aprender': {
+      id: '/aprender'
+      path: '/aprender'
+      fullPath: '/aprender'
+      preLoaderRoute: typeof AprenderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/auth': {
       id: '/auth'
       path: '/auth'
       fullPath: '/auth'
       preLoaderRoute: typeof AuthRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/comunidad': {
+      id: '/comunidad'
+      path: '/comunidad'
+      fullPath: '/comunidad'
+      preLoaderRoute: typeof ComunidadRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/conversacion': {
@@ -199,7 +239,9 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRoute,
   AjustesRoute: AjustesRoute,
+  AprenderRoute: AprenderRoute,
   AuthRoute: AuthRoute,
+  ComunidadRoute: ComunidadRoute,
   ConversacionRoute: ConversacionRoute,
   DiccionarioRoute: DiccionarioRoute,
   FavoritosRoute: FavoritosRoute,

@@ -8,6 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
 import { useIdentity } from "@/lib/identity";
 import { clearAllLocalData, useFavorites, useHistory } from "@/lib/localStore";
+import { useSpeechSpeed } from "@/lib/prefs";
 
 export const Route = createFileRoute("/ajustes")({
   head: () => ({
@@ -30,6 +31,7 @@ function SettingsPage() {
   const favorites = useFavorites();
   const identity = useIdentity();
   const [name, setName] = useState("");
+  const speech = useSpeechSpeed();
 
   useEffect(() => setName(identity.displayName), [identity.displayName]);
 
@@ -56,6 +58,17 @@ function SettingsPage() {
             <p className="text-sm text-muted-foreground">Más cómodo con poca luz.</p>
           </div>
           <Switch checked={dark} onCheckedChange={toggleTheme} />
+        </div>
+
+        <div className="flex items-center justify-between rounded-2xl border border-border bg-card p-4">
+          <div>
+            <p className="font-medium">Pronunciación lenta</p>
+            <p className="text-sm text-muted-foreground">Reproduce el audio más despacio para practicar.</p>
+          </div>
+          <Switch
+            checked={speech.speed === "slow"}
+            onCheckedChange={(v) => speech.setSpeed(v ? "slow" : "normal")}
+          />
         </div>
 
         <div className="rounded-2xl border border-border bg-card p-4">
@@ -120,6 +133,12 @@ function SettingsPage() {
           <div className="mt-3 flex flex-wrap gap-2">
             <Button asChild variant="secondary">
               <Link to="/frases">💬 Frases útiles</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link to="/aprender">🎓 Aprender</Link>
+            </Button>
+            <Button asChild variant="secondary">
+              <Link to="/comunidad">🤝 Comunidad</Link>
             </Button>
             <Button asChild variant="secondary">
               <Link to="/admin">🔐 Administración</Link>

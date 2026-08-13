@@ -1,5 +1,6 @@
 import { useCallback, useEffect, useRef, useState } from "react";
 import { speakText, transcribeAudio } from "./translate.functions";
+import { getSpeechSpeed } from "./prefs";
 
 export type Speed = "normal" | "slow";
 
@@ -62,7 +63,7 @@ async function playSpeechRequest(request: SpeakRequest): Promise<{ notice: strin
       text: request.text.trim() || request.pronunciation!.trim(),
       languageCode: request.languageCode ?? null,
       pronunciation: request.pronunciation ?? null,
-      speed: request.speed ?? "normal",
+      speed: request.speed ?? getSpeechSpeed(),
     },
   });
 
