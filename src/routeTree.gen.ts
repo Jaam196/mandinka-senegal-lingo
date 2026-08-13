@@ -14,6 +14,7 @@ import { Route as AdminRouteImport } from './routes/admin'
 import { Route as AjustesRouteImport } from './routes/ajustes'
 import { Route as AprenderRouteImport } from './routes/aprender'
 import { Route as AuthRouteImport } from './routes/auth'
+import { Route as ComunidadRouteImport } from './routes/comunidad'
 import { Route as ConversacionRouteImport } from './routes/conversacion'
 import { Route as DiccionarioRouteImport } from './routes/diccionario'
 import { Route as FavoritosRouteImport } from './routes/favoritos'
@@ -44,6 +45,11 @@ const AuthRoute = AuthRouteImport.update({
   path: '/auth',
   getParentRoute: () => rootRouteImport,
 } as any)
+const ComunidadRoute = ComunidadRouteImport.update({
+  id: '/comunidad',
+  path: '/comunidad',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConversacionRoute = ConversacionRouteImport.update({
   id: '/conversacion',
   path: '/conversacion',
@@ -71,6 +77,7 @@ export interface FileRoutesByFullPath {
   '/ajustes': typeof AjustesRoute
   '/aprender': typeof AprenderRoute
   '/auth': typeof AuthRoute
+  '/comunidad': typeof ComunidadRoute
   '/conversacion': typeof ConversacionRoute
   '/diccionario': typeof DiccionarioRoute
   '/favoritos': typeof FavoritosRoute
@@ -82,6 +89,7 @@ export interface FileRoutesByTo {
   '/ajustes': typeof AjustesRoute
   '/aprender': typeof AprenderRoute
   '/auth': typeof AuthRoute
+  '/comunidad': typeof ComunidadRoute
   '/conversacion': typeof ConversacionRoute
   '/diccionario': typeof DiccionarioRoute
   '/favoritos': typeof FavoritosRoute
@@ -94,6 +102,7 @@ export interface FileRoutesById {
   '/ajustes': typeof AjustesRoute
   '/aprender': typeof AprenderRoute
   '/auth': typeof AuthRoute
+  '/comunidad': typeof ComunidadRoute
   '/conversacion': typeof ConversacionRoute
   '/diccionario': typeof DiccionarioRoute
   '/favoritos': typeof FavoritosRoute
@@ -107,6 +116,7 @@ export interface FileRouteTypes {
     | '/ajustes'
     | '/aprender'
     | '/auth'
+    | '/comunidad'
     | '/conversacion'
     | '/diccionario'
     | '/favoritos'
@@ -118,6 +128,7 @@ export interface FileRouteTypes {
     | '/ajustes'
     | '/aprender'
     | '/auth'
+    | '/comunidad'
     | '/conversacion'
     | '/diccionario'
     | '/favoritos'
@@ -129,6 +140,7 @@ export interface FileRouteTypes {
     | '/ajustes'
     | '/aprender'
     | '/auth'
+    | '/comunidad'
     | '/conversacion'
     | '/diccionario'
     | '/favoritos'
@@ -141,6 +153,7 @@ export interface RootRouteChildren {
   AjustesRoute: typeof AjustesRoute
   AprenderRoute: typeof AprenderRoute
   AuthRoute: typeof AuthRoute
+  ComunidadRoute: typeof ComunidadRoute
   ConversacionRoute: typeof ConversacionRoute
   DiccionarioRoute: typeof DiccionarioRoute
   FavoritosRoute: typeof FavoritosRoute
@@ -184,6 +197,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AuthRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/comunidad': {
+      id: '/comunidad'
+      path: '/comunidad'
+      fullPath: '/comunidad'
+      preLoaderRoute: typeof ComunidadRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/conversacion': {
       id: '/conversacion'
       path: '/conversacion'
@@ -221,6 +241,7 @@ const rootRouteChildren: RootRouteChildren = {
   AjustesRoute: AjustesRoute,
   AprenderRoute: AprenderRoute,
   AuthRoute: AuthRoute,
+  ComunidadRoute: ComunidadRoute,
   ConversacionRoute: ConversacionRoute,
   DiccionarioRoute: DiccionarioRoute,
   FavoritosRoute: FavoritosRoute,

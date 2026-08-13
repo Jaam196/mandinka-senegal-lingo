@@ -5,6 +5,7 @@ import { ArrowLeftRight, Copy, Loader2, Mic, Plus, Square, Star, Volume2 } from 
 import { toast } from "sonner";
 
 import { AppShell } from "@/components/AppShell";
+import { PhraseOfTheDay } from "@/components/PhraseOfTheDay";
 import { CommunityPanel } from "@/components/CommunityPanel";
 import { TranslationEditorDialog } from "@/components/TranslationEditorDialog";
 import { ConfidenceBadge } from "@/components/ConfidenceBadge";
@@ -74,6 +75,8 @@ function TranslatorPage() {
   return (
     <AppShell>
       <h1 className="sr-only">Traductor Mandinka de Senegal ↔ Español</h1>
+
+      <PhraseOfTheDay />
 
       <div className="rounded-3xl bg-hero-gradient p-5 text-primary-foreground shadow-soft">
         <p className="text-xs uppercase tracking-widest opacity-80">Traductor especializado</p>

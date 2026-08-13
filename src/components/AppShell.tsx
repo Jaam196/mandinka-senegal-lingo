@@ -1,16 +1,21 @@
 import { Link } from "@tanstack/react-router";
-import { BookOpen, Home, MessagesSquare, Settings, Star } from "lucide-react";
+import { BookOpen, GraduationCap, Home, MessagesSquare, Settings, Star, WifiOff } from "lucide-react";
 import type { ReactNode } from "react";
+
+import { useOnline } from "@/lib/prefs";
 
 const NAV = [
   { to: "/", label: "Inicio", icon: Home },
   { to: "/diccionario", label: "Diccionario", icon: BookOpen },
   { to: "/conversacion", label: "Conversación", icon: MessagesSquare },
+  { to: "/aprender", label: "Aprender", icon: GraduationCap },
   { to: "/favoritos", label: "Favoritos", icon: Star },
   { to: "/ajustes", label: "Ajustes", icon: Settings },
 ] as const;
 
 export function AppShell({ children }: { children: ReactNode }) {
+  const online = useOnline();
+
   return (
     <div className="min-h-screen bg-background pb-24 md:pb-10">
       <header className="sticky top-0 z-30 border-b border-border/60 bg-background/85 backdrop-blur">
@@ -39,6 +44,12 @@ export function AppShell({ children }: { children: ReactNode }) {
           </nav>
         </div>
       </header>
+
+      {!online ? (
+        <div className="flex items-center justify-center gap-2 bg-secondary px-4 py-2 text-xs text-muted-foreground">
+          <WifiOff className="size-3.5" /> Sin conexión: puedes consultar el diccionario y tus datos guardados.
+        </div>
+      ) : null}
 
       <main className="mx-auto w-full max-w-3xl px-4 py-5">{children}</main>
 
