@@ -83,7 +83,7 @@ function LearnPage() {
       </p>
 
       <div className="mt-4 flex flex-wrap items-center gap-2">
-        <LanguageSelect value={lang} onChange={setLang} />
+        <LanguageSelect value={lang} onChange={setLang} label="Idioma que quieres practicar" />
         <Button variant={mode === "flash" ? "default" : "secondary"} size="sm" onClick={() => setMode("flash")}>
           Tarjetas
         </Button>
